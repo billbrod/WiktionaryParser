@@ -1,5 +1,10 @@
 ### Wiktionary Parser
 
+Forked from the [original version](https://github.com/Suyash458/WiktionaryParser/), this includes some small changes that I found help work with Yiddish entries better:
+- Replace `\u200e` with ` `.
+- Allow related words that apply to whole entry. 
+- Parse "Usage notes" section as well.
+
 A python project which downloads words from English Wiktionary ([en.wiktionary.org](https://en.wiktionary.org)) and parses articles' content in an easy to use JSON format. Right now, it parses etymologies, definitions, pronunciations, examples, audio links and related words.
 
 [![Downloads](http://pepy.tech/badge/wiktionaryparser)](http://pepy.tech/project/wiktionaryparser)
