@@ -270,7 +270,9 @@ class WiktionaryParser(object):
                         if example_index.startswith(definition_index):
                             def_obj.example_uses = examples
                     for related_word_index, related_words, relation_type in word_data['related']:
-                        if related_word_index.startswith(definition_index):
+                        # if related_word_index==1.1, then it's at the
+                        # top-level, and so applies to everything
+                        if related_word_index.startswith(definition_index) or related_word_index == '1.1':
                             def_obj.related_words.append(RelatedWord(relation_type, related_words))
                     data_obj.definition_list.append(def_obj)
             json_obj_list.append(data_obj.to_json())
