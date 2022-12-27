@@ -41,7 +41,7 @@ class WiktionaryParser(object):
         self.current_word = None
         self.PARTS_OF_SPEECH = copy(PARTS_OF_SPEECH)
         self.RELATIONS = copy(RELATIONS)
-        self.INCLUDED_ITEMS = self.RELATIONS + self.PARTS_OF_SPEECH + ['etymology', 'pronunciation']
+        self.INCLUDED_ITEMS = self.RELATIONS + self.PARTS_OF_SPEECH + ['etymology', 'pronunciation', 'usage notes']
 
     def include_part_of_speech(self, part_of_speech):
         part_of_speech = part_of_speech.lower()
@@ -94,6 +94,8 @@ class WiktionaryParser(object):
                 checklist += self.current_word
         elif content_type == 'related':
             checklist = self.RELATIONS
+        elif content_type == 'usage notes':
+            checklist = ['usage notes']
         else:
             return None
         id_list = []
@@ -133,6 +135,9 @@ class WiktionaryParser(object):
             'examples': self.parse_examples(word_contents),
             'definitions': self.parse_definitions(word_contents),
             'etymologies': self.parse_etymologies(word_contents),
+            # this gets parsed the same way, because the entry is similarly
+            # structured
+            'usage_notes': self.parse_etymologies(word_contents, 'usage notes'),
             'related': self.parse_related_words(word_contents),
             'pronunciations': self.parse_pronunciations(word_contents),
         }
@@ -212,8 +217,8 @@ class WiktionaryParser(object):
                 table = table.find_next_sibling()
         return example_list
 
-    def parse_etymologies(self, word_contents):
-        etymology_id_list = self.get_id_list(word_contents, 'etymologies')
+    def parse_etymologies(self, word_contents, content_type='etymologies'):
+        etymology_id_list = self.get_id_list(word_contents, content_type)
         etymology_list = []
         etymology_tag = None
         for etymology_index, etymology_id, _ in etymology_id_list:
@@ -253,6 +258,8 @@ class WiktionaryParser(object):
         for (current_etymology, next_etymology) in zip_longest(word_data['etymologies'], word_data['etymologies'][1:], fillvalue=('999', '')):
             data_obj = WordData()
             data_obj.etymology = current_etymology[1]
+            data_obj.usage_notes.extend([note[1] for note in
+                                         word_data['usage_notes'] if note])
             for pronunciation_index, text, audio_links in word_data['pronunciations']:
                 if (self.count_digits(current_etymology[0]) == self.count_digits(pronunciation_index)) or (current_etymology[0] <= pronunciation_index < next_etymology[0]):
                     data_obj.pronunciations = text

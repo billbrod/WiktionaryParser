@@ -1,10 +1,11 @@
 class WordData(object):
     def __init__(self, etymology=None, definitions=None, pronunciations=None,
-                 audio_links=None):
+                 audio_links=None, usage_notes=None):
         self.etymology = etymology if etymology else ''
         self.definition_list = definitions
         self.pronunciations = pronunciations if pronunciations else []
         self.audio_links = audio_links if audio_links else []
+        self.usage_notes = usage_notes if usage_notes else []
 
     @property
     def definition_list(self):
@@ -26,6 +27,7 @@ class WordData(object):
     def to_json(self):
         return {
             'etymology': self.etymology,
+            'usage_notes': self.usage_notes,
             'definitions': [definition.to_json() for definition in self._definition_list],
             'pronunciations': {
                 'text': self.pronunciations,
