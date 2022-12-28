@@ -169,7 +169,7 @@ class WiktionaryParser(object):
                 for nested_list_element in list_element.find_all('ul'):
                     nested_list_element.extract()
                 if list_element.text and not list_element.find('table', {'class': 'audiotable'}):
-                    pronunciation_text.append(list_element.text.replace('\u200e', ' ').strip())
+                    pronunciation_text.append(list_element.text.replace(u'\xa0', ' ').replace('\u200e', ' ').strip())
             pronunciation_list.append((pronunciation_index, pronunciation_text, audio_links))
         return pronunciation_list
 
@@ -186,11 +186,11 @@ class WiktionaryParser(object):
                 table = table.find_next_sibling()
                 if definition_tag.name == 'p':
                     if definition_tag.text.strip():
-                        definition_text.append(definition_tag.text.replace('\u200e', ' ').strip())
+                        definition_text.append(definition_tag.text.replace(u'\xa0', ' ').replace('\u200e', ' ').strip())
                 if definition_tag.name in ['ol', 'ul']:
                     for element in definition_tag.find_all('li', recursive=False):
                         if element.text:
-                            definition_text.append(element.text.replace('\u200e', ' ').strip())
+                            definition_text.append(element.text.replace(u'\xa0', ' ').replace('\u200e', ' ').strip())
             if def_type == 'definitions':
                 def_type = ''
             definition_list.append((def_index, definition_text, def_type))
@@ -207,7 +207,7 @@ class WiktionaryParser(object):
             examples = []
             while table and table.name == 'ol':
                 for element in table.find_all('dd'):
-                    example_text = re.sub(r'\([^)]*\)', '', element.text.replace('\u200e', ' ').strip())
+                    example_text = re.sub(r'\([^)]*\)', '', element.text.replace(u'\xa0', ' ').replace('\u200e', ' ').strip())
                     if example_text:
                         examples.append(example_text)
                     element.clear()
@@ -229,10 +229,10 @@ class WiktionaryParser(object):
                 etymology_tag = next_tag
                 next_tag = next_tag.find_next_sibling()
                 if etymology_tag.name == 'p':
-                    etymology_text += etymology_tag.text.replace('\u200e', ' ').strip()
+                    etymology_text += etymology_tag.text.replace(u'\xa0', ' ').replace('\u200e', ' ').strip()
                 else:
                     for list_tag in etymology_tag.find_all('li'):
-                        etymology_text += list_tag.text.replace('\u200e', ' ').strip() + '\n'
+                        etymology_text += list_tag.text.replace(u'\xa0', ' ').replace('\u200e', ' ').strip() + '\n'
             etymology_list.append((etymology_index, etymology_text))
         return etymology_list
 
@@ -247,7 +247,7 @@ class WiktionaryParser(object):
                 parent_tag = parent_tag.find_next_sibling()
             if parent_tag:
                 for list_tag in parent_tag.find_all('li'):
-                    words.append(list_tag.text.replace('\u200e', ' ').strip())
+                    words.append(list_tag.text.replace(u'\xa0', ' ').replace('\u200e', ' ').strip())
             related_words_list.append((related_index, words, relation_type))
         return related_words_list
 
