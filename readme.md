@@ -1,7 +1,7 @@
 ### Wiktionary Parser
 
 Forked from the [original version](https://github.com/Suyash458/WiktionaryParser/), this includes some small changes that I found help work with Yiddish entries better:
-- Replace `\u200e` and `u'\xa0'` with ` `.
+- Replace `\u200e` with ` `.
 - Allow related words that apply to whole entry. 
 - Parse "Usage notes" section as well.
 
